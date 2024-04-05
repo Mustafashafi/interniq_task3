@@ -1,34 +1,37 @@
-import nltk
-from nltk.chat.util import Chat, reflections
+import random
+import string
 
-# nltk.download('punkt')  # Uncomment and run this line if you haven't downloaded NLTK data
+def generate_password(length, use_letters=True, use_numbers=True, use_symbols=True):
+    characters = ''
+    if use_letters:
+        characters += string.ascii_letters
+    if use_numbers:
+        characters += string.digits
+    if use_symbols:
+        characters += string.punctuation
+    if not characters:
+        print("Error: Please select at least one type of characters.")
+        return None
 
-# Define patterns for the chatbot
-patterns = [
-    (r'hi|hello|hey', ['Hello!', 'Hi there!', 'How can I help you?']),
-    (r'bye|goodbye', ['Goodbye!', 'See you!', 'Have a great day!']),
-    (r'how are you', ["I'm a computer program, so I don't have feelings, but thanks for asking!"]),
-    (r'what is your name', ["I'm a chatbot. You can call me ChatGPT."]),
-    (r'my name is (.*)', ["Hello, {0}! How can I assist you today?"]),
-    (r'(.*) help (.*)', ['Sure, I can help. What do you need assistance with?']),
-    (r'(.*) your favorite (.*)', ["I'm just a program, so I don't have favorites."]),
-    # Add more patterns as needed
-]
+    generated_password = ''.join(random.choice(characters) for _ in range(length))
+    return generated_password
 
-# Create a chatbot using the defined patterns
-chatbot = Chat(patterns, reflections)
+def main():
+    print("Welcome to the Password Generator!")
 
-def run_chatbot():
-    print("Welcome! Type 'bye' to exit.")
-    
-    while True:
-        user_input = input("You: ").lower()
-        if user_input == 'bye':
-            print("Goodbye!")
-            break
+    try:
+        length = int(input("Enter the length of the password: "))
+    except ValueError:
+        print("Error: Please enter a valid integer for password length.")
+        return
 
-        response = chatbot.respond(user_input)
-        print("ChatGPT:", response)
+    use_letters = input("Include letters? (y/n): ").lower() == 'y'
+    use_numbers = input("Include numbers? (y/n): ").lower() == 'y'
+    use_symbols = input("Include symbols? (y/n): ").lower() == 'y'
+
+    password = generate_password(length, use_letters, use_numbers, use_symbols)
+    if password:
+        print("Generated Password:", password)
 
 if __name__ == "__main__":
-    run_chatbot()
+    main()
